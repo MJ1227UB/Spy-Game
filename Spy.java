@@ -13,7 +13,7 @@ public class Spy extends Mover
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
     
-    private static final int jumpStrength = 20;
+    private static final int jumpStrength = 40;
     
     private GreenfootImage imageIdle;
     private GreenfootImage image1Left;
@@ -44,17 +44,22 @@ public class Spy extends Mover
         image4Right = new GreenfootImage("Spy_run_3r.png");
         image5Right = new GreenfootImage("Spy_run_4r.png");
         image6Right = new GreenfootImage("Spy_run_5r.png");
-        //setImage("Spy_idle.png");
+        setImage("Spy_idle.png");
     }
     
     public void act() 
     {
         checkKeys();        
         checkFall();
+        checkWall();
     }
     
     private void checkKeys()
     {
+        if (Greenfoot.getKey() != null)
+        {
+            setImage("Spy_idle.png");
+        }
         if (Greenfoot.isKeyDown("left") )
         {
             switchImageLeft();
@@ -147,6 +152,14 @@ public class Spy extends Mover
         else
         {
             setImage(image1Right);
+        }
+    }
+    
+    private void checkWall()
+    {
+        if ( isTouching(Wall.class) )
+        {
+            setLocation( (getX()-10 ), getY() );
         }
     }
 }
