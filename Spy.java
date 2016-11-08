@@ -13,9 +13,12 @@ public class Spy extends Mover
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
     
-    private static final int jumpStrength = 40;
+    private static final int jumpStrength = 25;
     
+    private GreenfootImage imageJumpRight;
+    private GreenfootImage imageJumpLeft;
     private GreenfootImage imageIdle;
+    private GreenfootImage imageDown;
     private GreenfootImage image1Left;
     private GreenfootImage image2Left;
     private GreenfootImage image3Left;
@@ -31,7 +34,10 @@ public class Spy extends Mover
     
     public Spy()
     {
+        imageJumpRight = new GreenfootImage("Spy_jumpr.png");
+        imageJumpLeft = new GreenfootImage("Spy_jumpl.png");
         imageIdle = new GreenfootImage("Spy_idle.png");
+        imageDown = new GreenfootImage("Spy_down.png");
         image1Left = new GreenfootImage("Spy_run_0l.png");
         image2Left = new GreenfootImage("Spy_run_1l.png");
         image3Left = new GreenfootImage("Spy_run_2l.png");
@@ -48,10 +54,10 @@ public class Spy extends Mover
     }
     
     public void act() 
-    {
-        checkKeys();        
-        checkFall();
+    {       
         checkWall();
+        checkKeys();
+        checkFall();
     }
     
     private void checkKeys()
@@ -62,13 +68,21 @@ public class Spy extends Mover
         }
         if (Greenfoot.isKeyDown("left") )
         {
+           if(!checkDown())
+           {
             switchImageLeft();
             moveLeft();
+           }
         }
         if (Greenfoot.isKeyDown("right") )
-        {
+           if(!checkDown())
+           {
             switchImageRight();
             moveRight();
+           }
+        if (Greenfoot.isKeyDown("down") )
+        {
+            setImage(imageDown);
         }
         if (Greenfoot.isKeyDown("space") )
         {
@@ -88,7 +102,17 @@ public class Spy extends Mover
         if (onGround()) {
             setVSpeed(0);
         }
-        else {
+        else if ( Greenfoot.isKeyDown("left") ) {
+            setImage(imageJumpLeft);
+            fall();
+        }
+        else if ( Greenfoot.isKeyDown("right") )
+        {
+            setImage(imageJumpRight);
+            fall();
+        }
+        else
+        {
             fall();
         }
     }  
@@ -160,6 +184,18 @@ public class Spy extends Mover
         if ( isTouching(Wall.class) )
         {
             setLocation( (getX()-10 ), getY() );
+        }
+    }
+    
+    private boolean checkDown()
+    {
+        if (Greenfoot.isKeyDown("down"))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }

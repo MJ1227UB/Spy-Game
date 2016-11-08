@@ -19,4 +19,6 @@ comment7.target=void\ switchImageRight()
 comment7.text=\r\n\ Alternate\ the\ spy's\ image\ between\ image1\ and\ image2.\r\n
 comment8.params=
 comment8.target=void\ checkWall()
-numComments=9
+comment9.params=
+comment9.target=boolean\ checkDown()
+numComments=10
