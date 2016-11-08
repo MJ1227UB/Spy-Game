@@ -17,7 +17,9 @@ public class MyWorld extends World
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
         super(1250, 600, 1);
+        Greenfoot.setSpeed(45);
         addObject(new Ground(), 625, 600);
         addObject(new Spy(), 60, 537);
+        addObject(new Wall(), 400, 515);
     }
 }
