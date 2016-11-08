@@ -20,5 +20,5 @@ comment7.text=\r\n\ Alternate\ the\ spy's\ image\ between\ image1\ and\ image2.\
 comment8.params=
 comment8.target=void\ checkWall()
 comment9.params=
-comment9.target=boolean\ checkDown()
+comment9.target=boolean\ isSpyDown()
 numComments=10

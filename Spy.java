@@ -68,14 +68,14 @@ public class Spy extends Mover
         }
         if (Greenfoot.isKeyDown("left") )
         {
-           if(!checkDown())
+           if(!isSpyDown())
            {
             switchImageLeft();
             moveLeft();
            }
         }
         if (Greenfoot.isKeyDown("right") )
-           if(!checkDown())
+           if(!isSpyDown())
            {
             switchImageRight();
             moveRight();
@@ -187,7 +187,7 @@ public class Spy extends Mover
         }
     }
     
-    private boolean checkDown()
+    private boolean isSpyDown()
     {
         if (Greenfoot.isKeyDown("down"))
         {
