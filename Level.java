@@ -14,7 +14,8 @@ public abstract class Level extends World
      */
     public Level()
     {    
-        super(1250, 600, 1);
+        // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
+        super(1250, 600, 1); 
     }
     
     public void nextLevel() {}

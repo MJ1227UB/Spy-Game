@@ -8,10 +8,14 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Level2 extends Level
 {
+
+    /**
+     * Constructor for objects of class Level2.
+     * 
+     */
     public Level2()
     {
-        Greenfoot.setSpeed(45);
         addObject(new Ground(), 625, 600);
-        addObject(new Spy(), 60, 537);
+        addObject(new Spy(), 60, 547);
     }
 }
