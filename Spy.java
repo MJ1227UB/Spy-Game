@@ -12,11 +12,11 @@ public class Spy extends Actor
     private boolean haskey = false;
     private int direction = 1; // 1 = right and -1 = left
     
-    private GreenfootImage JumpRight = new GreenfootImage("Spy_jumpr.png");
-    private GreenfootImage JumpLeft = new GreenfootImage("Spy_jumpl.png");
+    private GreenfootImage jumpRight = new GreenfootImage("Spy_jumpr.png");
+    private GreenfootImage jumpLeft = new GreenfootImage("Spy_jumpl.png");
     
-    private GreenfootImage Idle = new GreenfootImage("Spy_idle.png");
-    private GreenfootImage Down = new GreenfootImage("Spy_down.png");
+    private GreenfootImage idle = new GreenfootImage("Spy_idle.png");
+    private GreenfootImage down = new GreenfootImage("Spy_down.png");
     
     private GreenfootImage run1l = new GreenfootImage("Spy_run_0l.png");
     private GreenfootImage run2l = new GreenfootImage("Spy_run_1l.png");
@@ -50,11 +50,11 @@ public class Spy extends Actor
     
     private void checkKey()
     {
-        if (Greenfoot.getKey() != null)
+        if ( Greenfoot.getKey() != null )
         {
-            setImage("Spy_idle.png");
+            setImage(idle);
         }
-        if(Greenfoot.isKeyDown("right"))
+        if( Greenfoot.isKeyDown("right") )
         {
             if (!isSpyDown())
             {
@@ -62,7 +62,7 @@ public class Spy extends Actor
                 moveRight();
             }
         }
-        if(Greenfoot.isKeyDown("left"))
+        if( Greenfoot.isKeyDown("left") )
         {
             if (!isSpyDown())
             {
@@ -70,9 +70,13 @@ public class Spy extends Actor
                 moveLeft();
             }
         }
-        if(Greenfoot.isKeyDown("space") && jumping == false)
+        if( Greenfoot.isKeyDown("space") && jumping == false )
         {
             jump();
+        }
+        if( isSpyDown() )
+        {
+            setImage(down);
         }
     }
     
@@ -88,6 +92,16 @@ public class Spy extends Actor
         if(onGround())
         {
             vSpeed = 0;
+        }
+        else if (Greenfoot.isKeyDown("right"))
+        {
+            setImage(jumpRight);
+            fall();
+        }
+        else if (Greenfoot.isKeyDown("left"))
+        {
+            setImage(jumpLeft);
+            fall();
         }
         else
         {
