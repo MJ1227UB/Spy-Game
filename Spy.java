@@ -1,190 +1,198 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
-/**
- * Write a description of class Spy here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
- */
-public class Spy extends Mover
+public class Spy extends Actor
 {
-    /**
-     * Act - do whatever the Spy wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
-     */
+    private int vSpeed = 0;
+    private int acceleration = 1;
+    private boolean jumping;
+    private int jumpStrength = 16;
+    private int speed = 4;
+    int score = 0;
+    int world = 0;
+    private boolean haskey = false;
+    private int direction = 1; // 1 = right and -1 = left
     
-    private static final int jumpStrength = 25;
+    private GreenfootImage jumpRight = new GreenfootImage("Spy_jumpr.png");
+    private GreenfootImage jumpLeft = new GreenfootImage("Spy_jumpl.png");
     
-    private GreenfootImage imageJumpRight;
-    private GreenfootImage imageJumpLeft;
-    private GreenfootImage imageIdle;
-    private GreenfootImage imageDown;
-    private GreenfootImage image1Left;
-    private GreenfootImage image2Left;
-    private GreenfootImage image3Left;
-    private GreenfootImage image4Left;
-    private GreenfootImage image5Left;
-    private GreenfootImage image6Left;
-    private GreenfootImage image1Right;
-    private GreenfootImage image2Right;
-    private GreenfootImage image3Right;
-    private GreenfootImage image4Right;
-    private GreenfootImage image5Right;
-    private GreenfootImage image6Right;
+    private GreenfootImage idle = new GreenfootImage("Spy_idle.png");
+    private GreenfootImage down = new GreenfootImage("Spy_down.png");
+    
+    private GreenfootImage run1l = new GreenfootImage("Spy_run_0l.png");
+    private GreenfootImage run2l = new GreenfootImage("Spy_run_1l.png");
+    private GreenfootImage run3l = new GreenfootImage("Spy_run_2l.png");
+    private GreenfootImage run4l = new GreenfootImage("Spy_run_3l.png");
+    private GreenfootImage run5l = new GreenfootImage("Spy_run_4l.png");
+    private GreenfootImage run6l = new GreenfootImage("Spy_run_5l.png");
+    private GreenfootImage run1r = new GreenfootImage("Spy_run_0r.png");
+    private GreenfootImage run2r = new GreenfootImage("Spy_run_1r.png");
+    private GreenfootImage run3r = new GreenfootImage("Spy_run_2r.png");
+    private GreenfootImage run4r = new GreenfootImage("Spy_run_3r.png");
+    private GreenfootImage run5r = new GreenfootImage("Spy_run_4r.png");
+    private GreenfootImage run6r = new GreenfootImage("Spy_run_5r.png");
+    
+    private int frame = 1;
+    private int animationCounter = 0;
     
     public Spy()
     {
-        imageJumpRight = new GreenfootImage("Spy_jumpr.png");
-        imageJumpLeft = new GreenfootImage("Spy_jumpl.png");
-        imageIdle = new GreenfootImage("Spy_idle.png");
-        imageDown = new GreenfootImage("Spy_down.png");
-        image1Left = new GreenfootImage("Spy_run_0l.png");
-        image2Left = new GreenfootImage("Spy_run_1l.png");
-        image3Left = new GreenfootImage("Spy_run_2l.png");
-        image4Left = new GreenfootImage("Spy_run_3l.png");
-        image5Left = new GreenfootImage("Spy_run_4l.png");
-        image6Left = new GreenfootImage("Spy_run_5l.png");
-        image1Right = new GreenfootImage("Spy_run_0r.png");
-        image2Right = new GreenfootImage("Spy_run_1r.png");
-        image3Right = new GreenfootImage("Spy_run_2r.png");
-        image4Right = new GreenfootImage("Spy_run_3r.png");
-        image5Right = new GreenfootImage("Spy_run_4r.png");
-        image6Right = new GreenfootImage("Spy_run_5r.png");
         setImage("Spy_idle.png");
     }
     
     public void act() 
     {       
-        checkWall();
-        checkKeys();
+        checkKey();
         checkFall();
+        platformAbove();
+        checkRightWalls();
+        checkLeftWalls();
     }
     
-    private void checkKeys()
+    private void checkKey()
     {
-        if (Greenfoot.getKey() != null)
+        if ( Greenfoot.getKey() != null )
         {
-            setImage("Spy_idle.png");
+            setImage(idle);
         }
-        if (Greenfoot.isKeyDown("left") )
+        if( Greenfoot.isKeyDown("right") )
         {
-           if(!isSpyDown())
-           {
-            switchImageLeft();
-            moveLeft();
-           }
+            if (!isSpyDown())
+            {
+                direction = 1;
+                moveRight();
+            }
         }
-        if (Greenfoot.isKeyDown("right") )
-           if(!isSpyDown())
-           {
-            switchImageRight();
-            moveRight();
-           }
-        if (Greenfoot.isKeyDown("down") )
+        if( Greenfoot.isKeyDown("left") )
         {
-            setImage(imageDown);
+            if (!isSpyDown())
+            {
+                direction = -1;
+                moveLeft();
+            }
         }
-        if (Greenfoot.isKeyDown("space") )
+        if( Greenfoot.isKeyDown("space") && jumping == false )
         {
-            if (onGround())
-                jump();
+            jump();
+        }
+        if( isSpyDown() )
+        {
+            setImage(down);
         }
     }
     
-    private void jump()
+    public void jump()
     {
-        setVSpeed(-jumpStrength);
+        vSpeed = vSpeed - jumpStrength;
+        jumping = true;
         fall();
     }
     
-    private void checkFall()
+    public void checkFall()
     {
-        if (onGround()) {
-            setVSpeed(0);
+        if(onGround())
+        {
+            vSpeed = 0;
         }
-        else if ( Greenfoot.isKeyDown("left") ) {
-            setImage(imageJumpLeft);
+        else if (Greenfoot.isKeyDown("right"))
+        {
+            setImage(jumpRight);
             fall();
         }
-        else if ( Greenfoot.isKeyDown("right") )
+        else if (Greenfoot.isKeyDown("left"))
         {
-            setImage(imageJumpRight);
+            setImage(jumpLeft);
             fall();
         }
         else
         {
             fall();
         }
-    }  
-    
-    /**
-     * Alternate the spy's image between image1 and image2.
-     */
-    public void switchImageLeft()
+    }
+       
+    public void moveLeft()
     {
-        if (getImage() == image1Left) 
+        setLocation(getX()-speed, getY());
+        if(animationCounter %6 == 0)
         {
-            setImage(image2Left);
-        }
-        else if (getImage() == image2Left) 
-        {
-            setImage(image3Left);
-        }
-        else if (getImage() == image3Left) 
-        {
-            setImage(image4Left);
-        }
-        else if (getImage() == image4Left) 
-        {
-            setImage(image5Left);
-        }
-        else if (getImage() == image5Left) 
-        {
-            setImage(image6Left);
-        }
-        else
-        {
-            setImage(image1Left);
+            animateLeft();
         }
     }
     
     /**
      * Alternate the spy's image between image1 and image2.
      */
-    public void switchImageRight()
+    public void animateLeft()
     {
-        if (getImage() == image1Right) 
+        if(frame == 1)
         {
-            setImage(image2Right);
+            setImage(run1l);
         }
-        else if (getImage() == image2Right) 
+        else if(frame == 2)
         {
-            setImage(image3Right);
+            setImage(run2l);
         }
-        else if (getImage() == image3Right) 
+        else if(frame == 3)
         {
-            setImage(image4Right);
+            setImage(run3l);
         }
-        else if (getImage() == image4Right) 
+        else if(frame == 4)
         {
-            setImage(image5Right);
+            setImage(run4l);
         }
-        else if (getImage() == image5Right) 
+        else if(frame == 5)
         {
-            setImage(image6Right);
+            setImage(run5l);
         }
-        else
+        else if(frame == 6)
         {
-            setImage(image1Right);
+            setImage(run6l);
+            frame = 1;
+            return;
+        }
+        frame++;
+    }
+    
+    public void moveRight()
+    {
+        setLocation(getX()+speed, getY());
+        if(animationCounter % 6 == 0)
+        {
+            animateRight();
         }
     }
     
-    private void checkWall()
+    /**
+     * Alternate the spy's image between image1 and image2.
+     */
+    public void animateRight()
     {
-        if ( isTouching(Wall.class) )
+        if(frame == 1)
         {
-            setLocation( (getX()-10 ), getY() );
+            setImage(run1r);
         }
+        else if(frame == 2)
+        {
+            setImage(run2r);
+        }
+        else if(frame == 3)
+        {
+            setImage(run3r);
+        }
+        else if(frame == 4)
+        {
+            setImage(run4r);
+        }
+        else if(frame == 5)
+        {
+            setImage(run5r);
+        }
+        else if(frame == 6)
+        {
+            setImage(run6r);
+            frame = 1;
+            return;
+        }
+        frame++;
     }
     
     private boolean isSpyDown()
@@ -197,5 +205,121 @@ public class Spy extends Mover
         {
             return false;
         }
+    }
+    
+    public boolean checkRightWalls()
+    {
+        int spriteWidth = getImage().getWidth();
+        int xDistance = (int)(spriteWidth/2);
+        Actor rightWall = getOneObjectAtOffset(xDistance, 0, Platform.class);
+        if(rightWall == null)
+        {
+            return false;
+        }
+        else
+        {
+            stopByRightWall(rightWall);
+            return true;
+        }
+    }
+
+    public void stopByRightWall(Actor rightWall)
+    {
+        int wallWidth = rightWall.getImage().getWidth();
+        int newX = rightWall.getX() - (wallWidth + getImage().getWidth())/2;
+        setLocation(newX - 5, getY());
+
+    }
+
+    public boolean checkLeftWalls()
+    {
+        int spriteWidth = getImage().getWidth();
+        int xDistance = (int)(spriteWidth/-2);
+        Actor leftWall = getOneObjectAtOffset(xDistance, 0, Platform.class);
+        if(leftWall == null)
+        {
+            return false;
+        }
+        else
+        {
+            stopByLeftWall(leftWall);
+            return true;
+        }
+    }
+
+    public void stopByLeftWall(Actor leftWall)
+    {
+        int wallWidth = leftWall.getImage().getWidth();
+        int newX = leftWall.getX() + (wallWidth + getImage().getWidth())/2;
+        setLocation(newX + 5, getY());
+    }
+
+    public void bopHead(Actor ceiling)
+    {
+        int ceilingHeight = ceiling.getImage().getHeight();
+        int newY = ceiling.getY() + (ceilingHeight + getImage().getHeight())/2;
+        setLocation(getX(), newY);
+    }
+    
+    public void fall()
+    {
+        setLocation(getX(), getY() + vSpeed);
+        if(vSpeed <=9)
+        {
+            vSpeed = vSpeed + acceleration;
+        }
+        jumping = true;
+    }
+    
+    public boolean platformAbove()
+    {
+        int spriteHeight = getImage().getHeight();
+        int yDistance = (int)(spriteHeight/-2);
+        Actor ceiling = getOneObjectAtOffset(0, yDistance, Platform.class);
+        if(ceiling != null)
+        {
+            vSpeed = 1;
+            bopHead(ceiling);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
+    public boolean onGround()
+    {
+        int spriteHeight = getImage().getHeight();
+        int yDistance = (int)(spriteHeight/2) + 5;
+        Actor ground = getOneObjectAtOffset(0, getImage().getHeight()/2, Platform.class);
+        if(ground == null)
+        {
+            jumping = true;
+            return false;
+        }
+        else
+        {
+            moveToGround(ground);
+            return true;
+        }
+    }
+    
+    public void moveToGround(Actor ground)
+    {
+        int groundHeight = ground.getImage().getHeight();
+        int newY = ground.getY() - (groundHeight + getImage().getHeight())/2;
+        setLocation(getX(), newY);
+        jumping = false;
+    }
+    
+    /**
+     * Return true if we can see an object of class 'clss' right where we are. 
+     * False if there is no such object here.
+     */
+    public boolean canSee(Class clss)
+    {
+        Actor actor = getOneObjectAtOffset(0, 0, clss);
+        return actor != null;        
     }
 }
