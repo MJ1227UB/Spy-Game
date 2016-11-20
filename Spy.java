@@ -4,13 +4,17 @@ public class Spy extends Actor
 {
     private int vSpeed = 0;
     private int acceleration = 1;
-    private boolean jumping;
     private int jumpStrength = 16;
     private int speed = 4;
-    int score = 0;
-    int world = 0;
-    private boolean haskey = false;
+    private int frame = 1;
+    private int animationCounter = 0;
     private int direction = 1; // 1 = right and -1 = left
+    int world = 0;
+    
+    private boolean jumping;
+    private boolean haskey = false;
+    
+    public static Spy main;
     
     private GreenfootImage jumpRight = new GreenfootImage("Spy_jumpr.png");
     private GreenfootImage jumpLeft = new GreenfootImage("Spy_jumpl.png");
@@ -19,11 +23,12 @@ public class Spy extends Actor
     private GreenfootImage down = new GreenfootImage("Spy_down.png");
     
     private GreenfootImage run1l = new GreenfootImage("Spy_run_0l.png");
-    private GreenfootImage run2l = new GreenfootImage("Spy_run_1l.png");
+    private GreenfootImage run2l = new GreenfootImage("Spy_run_1l.png");    
     private GreenfootImage run3l = new GreenfootImage("Spy_run_2l.png");
     private GreenfootImage run4l = new GreenfootImage("Spy_run_3l.png");
     private GreenfootImage run5l = new GreenfootImage("Spy_run_4l.png");
     private GreenfootImage run6l = new GreenfootImage("Spy_run_5l.png");
+    
     private GreenfootImage run1r = new GreenfootImage("Spy_run_0r.png");
     private GreenfootImage run2r = new GreenfootImage("Spy_run_1r.png");
     private GreenfootImage run3r = new GreenfootImage("Spy_run_2r.png");
@@ -31,12 +36,10 @@ public class Spy extends Actor
     private GreenfootImage run5r = new GreenfootImage("Spy_run_4r.png");
     private GreenfootImage run6r = new GreenfootImage("Spy_run_5r.png");
     
-    private int frame = 1;
-    private int animationCounter = 0;
-    
     public Spy()
     {
-        setImage("Spy_idle.png");
+        setImage(idle);
+        main=this;
     }
     
     public void act() 
@@ -46,8 +49,14 @@ public class Spy extends Actor
         platformAbove();
         checkRightWalls();
         checkLeftWalls();
+        checkIfHasKey();
+        grab();
+        exit();
     }
     
+    /**
+     * check what key is pressed, do a certain action acoording to the keypress.
+     */
     private void checkKey()
     {
         if ( Greenfoot.getKey() != null )
@@ -80,6 +89,9 @@ public class Spy extends Actor
         }
     }
     
+    /**
+     * makes the spy jump.
+     */
     public void jump()
     {
         vSpeed = vSpeed - jumpStrength;
@@ -87,6 +99,9 @@ public class Spy extends Actor
         fall();
     }
     
+    /**
+     * Makes the spy fall down, when he is in the air.
+     */
     public void checkFall()
     {
         if(onGround())
@@ -108,7 +123,10 @@ public class Spy extends Actor
             fall();
         }
     }
-       
+    
+    /**
+     * moves the spy left.
+     */
     public void moveLeft()
     {
         setLocation(getX()-speed, getY());
@@ -119,7 +137,7 @@ public class Spy extends Actor
     }
     
     /**
-     * Alternate the spy's image between image1 and image2.
+     * animates the spy when running left.
      */
     public void animateLeft()
     {
@@ -152,6 +170,9 @@ public class Spy extends Actor
         frame++;
     }
     
+    /**
+     * moves the spy right.
+     */
     public void moveRight()
     {
         setLocation(getX()+speed, getY());
@@ -162,7 +183,7 @@ public class Spy extends Actor
     }
     
     /**
-     * Alternate the spy's image between image1 and image2.
+     * animates the spy when running right.
      */
     public void animateRight()
     {
@@ -195,6 +216,9 @@ public class Spy extends Actor
         frame++;
     }
     
+    /**
+     * check if key "down" is pressed.
+     */
     private boolean isSpyDown()
     {
         if (Greenfoot.isKeyDown("down"))
@@ -207,6 +231,9 @@ public class Spy extends Actor
         }
     }
     
+    /**
+     * messure the distance from the spy to a wall on his right side.
+     */
     public boolean checkRightWalls()
     {
         int spriteWidth = getImage().getWidth();
@@ -223,6 +250,9 @@ public class Spy extends Actor
         }
     }
 
+    /**
+     * makes the spy stop if he collides with a wall to his right.
+     */
     public void stopByRightWall(Actor rightWall)
     {
         int wallWidth = rightWall.getImage().getWidth();
@@ -230,7 +260,10 @@ public class Spy extends Actor
         setLocation(newX - 5, getY());
 
     }
-
+    
+    /**
+     * messure the distance from the spy to a wall on his left side.
+     */
     public boolean checkLeftWalls()
     {
         int spriteWidth = getImage().getWidth();
@@ -246,14 +279,20 @@ public class Spy extends Actor
             return true;
         }
     }
-
+    
+    /**
+     * makes the spy stop if he collides with a wall to his left.
+     */
     public void stopByLeftWall(Actor leftWall)
     {
         int wallWidth = leftWall.getImage().getWidth();
         int newX = leftWall.getX() + (wallWidth + getImage().getWidth())/2;
         setLocation(newX + 5, getY());
     }
-
+    
+    /**
+     * makes the spy stop if he collides with the ceiling. 
+     */
     public void bopHead(Actor ceiling)
     {
         int ceilingHeight = ceiling.getImage().getHeight();
@@ -261,6 +300,9 @@ public class Spy extends Actor
         setLocation(getX(), newY);
     }
     
+    /**
+     * makes te spy fall down if he is in the air.
+     */
     public void fall()
     {
         setLocation(getX(), getY() + vSpeed);
@@ -271,6 +313,9 @@ public class Spy extends Actor
         jumping = true;
     }
     
+    /**
+     * messure the distance to the ceiling.
+     */
     public boolean platformAbove()
     {
         int spriteHeight = getImage().getHeight();
@@ -288,6 +333,9 @@ public class Spy extends Actor
         }
     }
     
+    /**
+     * checks if the spy is on the ground.
+     */
     public boolean onGround()
     {
         int spriteHeight = getImage().getHeight();
@@ -305,6 +353,10 @@ public class Spy extends Actor
         }
     }
     
+    /**
+     * if the spy is not on ground and is not jumping.
+     * moves the spy to the ground.
+     */
     public void moveToGround(Actor ground)
     {
         int groundHeight = ground.getImage().getHeight();
@@ -314,12 +366,57 @@ public class Spy extends Actor
     }
     
     /**
-     * Return true if we can see an object of class 'clss' right where we are. 
-     * False if there is no such object here.
+     * check if the spy can see an object.
      */
     public boolean canSee(Class clss)
     {
         Actor actor = getOneObjectAtOffset(0, 0, clss);
         return actor != null;        
+    }
+    
+    /**
+     * make the spy able to pick up objects.
+     */
+    public void get(Class clss)
+    {
+        Actor actor = getOneObjectAtOffset(0, 0, clss);
+        if (actor != null)
+        {
+            getWorld().removeObject(actor);
+        }
+    }
+    
+    /**
+     * makes the spy pick up the portal key.
+     */
+    public void grab()
+    {
+        if (canSee(Key.class))
+        {
+            get(Key.class);
+            haskey = true;
+        }
+    }
+    
+    /**
+     * the spy goes to next level if he enters the portal when he have the key
+     */
+    public void exit()
+    {
+        if (canSee(Portal.class) && haskey == true)
+        {
+            ((Level)getWorld()).nextLevel();
+        }
+    }
+    
+    /**
+     * check if the spy holds the key.
+     */
+    public boolean checkIfHasKey()
+    {
+        if (haskey == true) 
+        return true;
+        else
+        return false;
     }
 }

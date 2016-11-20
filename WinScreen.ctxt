@@ -1,0 +1,11 @@
+#BlueJ class context
+comment0.target=WinScreen
+comment1.params=
+comment1.target=WinScreen()
+comment2.params=
+comment2.target=void\ prepare()
+comment2.text=\r\n\ add\ the\ win\ message\ to\ the\ Win\ Screen.\r\n
+comment3.params=
+comment3.target=void\ act()
+comment3.text=\r\n\ press\ enter\ to\ restart\ game\ if\ won.\r\n
+numComments=4

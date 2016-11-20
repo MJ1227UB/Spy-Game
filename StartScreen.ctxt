@@ -1,0 +1,11 @@
+#BlueJ class context
+comment0.target=StartScreen
+comment1.params=
+comment1.target=StartScreen()
+comment2.params=
+comment2.target=void\ prepare()
+comment2.text=\r\n\ print\ welcome\ message\ to\ the\ start\ screen.\r\n
+comment3.params=
+comment3.target=void\ act()
+comment3.text=\r\n\ press\ enter\ to\ start\ the\ game.\ \r\n
+numComments=4
